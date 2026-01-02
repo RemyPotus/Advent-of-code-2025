@@ -7,7 +7,7 @@ export class DialManager {
   private zeroCount = 0;
   private dialPosition = 50; 
   private readonly minLimit = 0;
-  private readonly maxLimit = 50;
+  private readonly maxLimit = 99;
 
   public constructor(inputfile: string){
     this.inputFile = inputfile;
@@ -17,6 +17,7 @@ export class DialManager {
   public findPassword(): number{
     const cleanInput = this.cleanInput();
     const rotations = this.mapToRotations(cleanInput);
+    console.log(rotations);
     rotations.forEach((rotation) => {
       this.computeNextRotation(rotation);
     });
@@ -51,16 +52,17 @@ export class DialManager {
     }
 
     this.zeroCountIncrement();
+    console.log('dial postion: ',this.dialPosition);
   }
 
   private computeRightRotation(value: number){
-    const newPosition = this.dialPosition + value;
-    this.dialPosition = newPosition > this.maxLimit ? newPosition + 100 : newPosition
+    const newValue = this.dialPosition + value;
+    this.dialPosition = newValue > this.maxLimit ? newValue - 100 : newValue
   };
 
   private computeLeftRotation(value: number) {
-    const newPosition = this.dialPosition + value;
-    this.dialPosition = newPosition < this.minLimit ? newPosition + 100 : newPosition
+    const newValue = this.dialPosition - value;
+    this.dialPosition = newValue < this.minLimit ? 100 + newValue : newValue
   };
 
   private zeroCountIncrement(): void{
