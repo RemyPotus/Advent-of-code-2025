@@ -5,7 +5,9 @@ import * as fs from 'fs';
 export class DialManager {
   public inputFile: string;
   private zeroCount = 0;
-  private dialPosition = 0; 
+  private dialPosition = 50; 
+  private readonly minLimit = 0;
+  private readonly maxLimit = 50;
 
   public constructor(inputfile: string){
     this.inputFile = inputfile;
@@ -13,13 +15,18 @@ export class DialManager {
 
 
   public findPassword(): number{
+    const cleanInput = this.cleanInput();
+    const rotations = this.mapToRotations(cleanInput);
+    rotations.forEach((rotation) => {
+      this.computeNextRotation(rotation);
+    });
     return this.zeroCount;
   };
 
 
 
   private cleanInput(): string[] {
-    const INPUT: string = fs.readFileSync(`'./day-1/'${this.inputFile}`,'utf-8');
+    const INPUT: string = fs.readFileSync(`./day-1/${this.inputFile}`,'utf-8');
     const rotations: string[] = INPUT.split(/\r?\n/);
     return rotations;
  
@@ -48,12 +55,12 @@ export class DialManager {
 
   private computeRightRotation(value: number){
     const newPosition = this.dialPosition + value;
-    this.dialPosition = newPosition > 99 ? newPosition + 100 : newPosition
+    this.dialPosition = newPosition > this.maxLimit ? newPosition + 100 : newPosition
   };
 
   private computeLeftRotation(value: number) {
     const newPosition = this.dialPosition + value;
-    this.dialPosition = newPosition < 0 ? newPosition + 100 : newPosition
+    this.dialPosition = newPosition < this.minLimit ? newPosition + 100 : newPosition
   };
 
   private zeroCountIncrement(): void{
