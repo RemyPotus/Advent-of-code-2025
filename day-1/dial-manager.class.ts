@@ -6,8 +6,6 @@ export class DialManager {
   public inputFile: string;
   private zeroCount = 0;
   private dialPosition = 50; 
-  private readonly minLimit = 0;
-  private readonly maxLimit = 99;
 
   public constructor(inputfile: string){
     this.inputFile = inputfile;
@@ -51,38 +49,17 @@ export class DialManager {
     }
 
     this.zeroCountIncrement();
-    console.log('dial postion: ',this.dialPosition);
   }
 
   private computeRightRotation(value: number){
     const newValue = this.dialPosition + value;
-    if(newValue > this.maxLimit){
-      this.dialPosition = this.get2LastDigits(newValue);
-    }else {
-      this.dialPosition = newValue;
-    }
-    // this.dialPosition = newValue > this.maxLimit ? newValue - 100 : newValue
+    this.dialPosition = (newValue) % 100
   };
 
   private computeLeftRotation(value: number) {
-    const newValue = this.dialPosition - value;
-    if(newValue < this.minLimit){
-      if(newValue > -100){
-        this.dialPosition = 100 + newValue
-      }else {
-        this.dialPosition = 100 - this.get2LastDigits(newValue);
-      }
-      
-    }else {
-      this.dialPosition = newValue;
-    }
-    // this.dialPosition = newValue < this.minLimit ? 100 + newValue : newValue
+    const newValue = this.dialPosition - value +100;
+    this.dialPosition = (newValue) % 100
   };
-
-  private get2LastDigits(value: number): number{
-    const stringValue = value.toString();
-    return parseInt(stringValue.substring(stringValue.length  -2, stringValue.length))
-  }
 
   private zeroCountIncrement(): void{
     if(this.dialPosition === 0){
