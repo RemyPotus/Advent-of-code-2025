@@ -17,7 +17,6 @@ export class DialManager {
   public findPassword(): number{
     const cleanInput = this.cleanInput();
     const rotations = this.mapToRotations(cleanInput);
-    console.log(rotations);
     rotations.forEach((rotation) => {
       this.computeNextRotation(rotation);
     });
@@ -57,13 +56,33 @@ export class DialManager {
 
   private computeRightRotation(value: number){
     const newValue = this.dialPosition + value;
-    this.dialPosition = newValue > this.maxLimit ? newValue - 100 : newValue
+    if(newValue > this.maxLimit){
+      this.dialPosition = this.get2LastDigits(newValue);
+    }else {
+      this.dialPosition = newValue;
+    }
+    // this.dialPosition = newValue > this.maxLimit ? newValue - 100 : newValue
   };
 
   private computeLeftRotation(value: number) {
     const newValue = this.dialPosition - value;
-    this.dialPosition = newValue < this.minLimit ? 100 + newValue : newValue
+    if(newValue < this.minLimit){
+      if(newValue > -100){
+        this.dialPosition = 100 + newValue
+      }else {
+        this.dialPosition = 100 - this.get2LastDigits(newValue);
+      }
+      
+    }else {
+      this.dialPosition = newValue;
+    }
+    // this.dialPosition = newValue < this.minLimit ? 100 + newValue : newValue
   };
+
+  private get2LastDigits(value: number): number{
+    const stringValue = value.toString();
+    return parseInt(stringValue.substring(stringValue.length  -2, stringValue.length))
+  }
 
   private zeroCountIncrement(): void{
     if(this.dialPosition === 0){
