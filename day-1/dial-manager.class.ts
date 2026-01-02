@@ -42,6 +42,8 @@ export class DialManager {
   };
 
   private computeNextRotation(rotation: Rotation): void{
+    // console.log(this.dialPosition, "current position", rotation, "next rotation");
+
     if(rotation.direction === Direction.Left){
       this.computeLeftRotation(rotation.value);
     }else {
@@ -53,11 +55,21 @@ export class DialManager {
 
   private computeRightRotation(value: number){
     const newValue = this.dialPosition + value;
+    // if(newValue > 99) this.computeTraveledThroughZero(newValue);
     this.dialPosition = (newValue) % 100
   };
 
   private computeLeftRotation(value: number) {
     const newValue = this.dialPosition - value +100;
+    // if(newValue <  99 ){ 
+    //   if(newValue > 0 && this.dialPosition !== 0){
+    //     this.zeroCount++; 
+    //     // console.log('add zero')
+    //   } else {
+    //     this.computeTraveledThroughZero(newValue)
+    //   }
+    // }
+
     this.dialPosition = (newValue) % 100
   };
 
@@ -66,4 +78,14 @@ export class DialManager {
       this.zeroCount++;
     } 
   }
+
+  // private computeTraveledThroughZero(value: number){
+  //   let count = Math.floor(value / 100);
+  //   if(count < 0) count = count * -1;
+
+  //   if(count > 0 && this.dialPosition === 0) count -=1;
+    
+  //   this.zeroCount += count;
+  //   console.log('traveled',count,' times to 0')
+  // }
 }
